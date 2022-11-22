@@ -8,7 +8,6 @@ const restartButton = document.getElementById('restartButton')
 const winningMessageTextElement = document.getElementById('winningMessageText')
 let isPlayer_O_Turn = false
 
-
 const WINNING_COMBINATIONS = [
 	[0, 1, 2],
 	[3, 4, 5],
@@ -35,3 +34,43 @@ function startGame() {
 	setBoardHoverClass()
 	winningMessageElement.classList.remove('show')
 }
+
+function handleCellClick(e) {
+	const cell = e.target
+	const currentClass = isPlayer_O_Turn ? PLAYER_O_CLASS : PLAYER_X_CLASS
+	placeMark(cell, currentClass)
+	if (checkWin(currentClass)) {
+		endGame(false)
+	} else if (isDraw()) {
+		endGame(true)
+	} else {
+		swapTurns()
+		setBoardHoverClass()
+	}
+}
+
+function endGame(draw) {
+	if (draw) {
+		winningMessageTextElement.innerText = "It's a draw!"
+	} else {
+		winningMessageTextElement.innerText = `Player with ${isPLayer_O_Turn ? "O's" : "X's"} wins!`
+	}
+	winningMessageElement.classList.add('show')
+}
+
+function isDraw() {
+	return [...cellElements].every(cell => {
+		return cell.classList.contains(PLAYER_X_CLASS || cell.classList.contains(PLAYER_O_CLASS))
+	})
+}
+
+function placeMark(cell, currentClass) {
+	cell.classList.add(currentClass)
+}
+
+function swapTurns() {
+	isPlayer_O_Turn = !isPlayer_O_Turn
+}
+
+
+
